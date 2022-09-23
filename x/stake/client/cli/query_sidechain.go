@@ -629,6 +629,7 @@ func GetCmdQuerySideChainPool(storeName string, cdc *codec.Codec) *cobra.Command
 	return cmd
 }
 
+// 查询侧链的top验证者
 func GetCmdQuerySideChainTopValidators(cdc *codec.Codec) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "side-top-validators",

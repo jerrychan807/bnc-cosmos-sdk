@@ -223,6 +223,7 @@ type QueryTopValidatorsParams struct {
 	Top int
 }
 
+// 查询原生验证者
 func queryValidators(ctx sdk.Context, cdc *codec.Codec, k keep.Keeper) (res []byte, err sdk.Error) {
 	stakeParams := k.GetParams(ctx)
 	validators := k.GetValidators(ctx, stakeParams.MaxValidators)
@@ -381,6 +382,7 @@ func queryParameters(ctx sdk.Context, cdc *codec.Codec, k keep.Keeper) (res []by
 	return res, nil
 }
 
+// 查询侧链验证者
 func queryTopValidators(ctx sdk.Context, cdc *codec.Codec, params *QueryTopValidatorsParams, k keep.Keeper) (res []byte, err sdk.Error) {
 
 	if params.Top == 0 {

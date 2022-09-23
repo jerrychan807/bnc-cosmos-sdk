@@ -10,6 +10,7 @@ import (
 )
 
 // slashing begin block functionality
+// 先是进行判断异常特别是双签，然后遍历验证人来对块进行签名。
 func BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock, sk Keeper) (tags sdk.Tags) {
 
 	// Tag the height

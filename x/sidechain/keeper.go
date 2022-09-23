@@ -100,6 +100,7 @@ func (k *Keeper) RegisterChannel(name string, id sdk.ChannelID, app sdk.CrossCha
 }
 
 // internally, we use name as the id of the chain, must be unique
+// example: node节点上会给chainId 设置一个别名如  主网测试bsc对应
 func (k *Keeper) RegisterDestChain(name string, chainID sdk.ChainID) error {
 	if strings.Contains(name, separator) {
 		return fmt.Errorf("destination chain name should not contains %s", separator)

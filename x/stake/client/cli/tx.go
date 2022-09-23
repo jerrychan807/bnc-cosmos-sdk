@@ -21,6 +21,7 @@ import (
 )
 
 // GetCmdCreateValidator implements the create validator command handler.
+// 创建验证人命令的源码
 func GetCmdCreateValidator(cdc *codec.Codec) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "create-validator",

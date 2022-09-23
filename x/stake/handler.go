@@ -16,9 +16,9 @@ func NewHandler(k keeper.Keeper, govKeeper gov.Keeper) sdk.Handler {
 	return func(ctx sdk.Context, msg sdk.Msg) sdk.Result {
 		// NOTE msg already has validate basic run
 		switch msg := msg.(type) {
-		case types.MsgCreateValidatorProposal:
+		case types.MsgCreateValidatorProposal: //
 			return handleMsgCreateValidatorAfterProposal(ctx, msg, k, govKeeper)
-		case types.MsgRemoveValidator:
+		case types.MsgRemoveValidator: // 移除验证者
 			return handleMsgRemoveValidatorAfterProposal(ctx, msg, k, govKeeper)
 		// disabled other msg handling
 		//case types.MsgEditValidator:

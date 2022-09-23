@@ -28,6 +28,7 @@ type (
 	QueryDelegatorParams       = querier.QueryDelegatorParams
 	QueryValidatorParams       = querier.QueryValidatorParams
 	QueryBondsParams           = querier.QueryBondsParams
+	// 以下为新增的
 	CreateValidatorJsonMsg     = types.CreateValidatorJsonMsg
 	QueryTopValidatorsParams   = querier.QueryTopValidatorsParams
 	BaseParams                 = querier.BaseParams

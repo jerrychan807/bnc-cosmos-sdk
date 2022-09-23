@@ -21,24 +21,27 @@ import (
 // bond shares is based on the amount of coins delegated divided by the current
 // exchange rate. Voting power can be calculated as total bonds multiplied by
 // exchange rate.
+// 验证器定义债券份额的总量以及它们与代币的汇率。利息的积累被模拟为汇率的上升，而大幅下降则被模拟为汇率的下降。
+// 当代币被委托给这个验证器时，验证器将获得一个委托，其债券份额的数量基于委托的硬币数量除以当前汇率。
+// 投票权可以用总债券乘以汇率来计算。
 type Validator struct {
-	FeeAddr      sdk.AccAddress `json:"fee_addr"`                   // address for fee collection
-	OperatorAddr sdk.ValAddress `json:"operator_address"`           // address of the validator's operator; bech encoded in JSON
-	ConsPubKey   crypto.PubKey  `json:"consensus_pubkey,omitempty"` // the consensus public key of the validator; bech encoded in JSON
-	Jailed       bool           `json:"jailed"`                     // has the validator been jailed from bonded status?
+	FeeAddr      sdk.AccAddress `json:"fee_addr"`                   // address for fee collection 收取费用地址
+	OperatorAddr sdk.ValAddress `json:"operator_address"`           // address of the validator's operator; bech encoded in JSON 验证者节点运营方地址
+	ConsPubKey   crypto.PubKey  `json:"consensus_pubkey,omitempty"` // the consensus public key of the validator; bech encoded in JSON 验证者的共识公钥
+	Jailed       bool           `json:"jailed"`                     // has the validator been jailed from bonded status? 验证者是否处于监狱禁闭惩罚状态
 
-	Status          sdk.BondStatus `json:"status"`           // validator status (bonded/unbonding/unbonded)
-	Tokens          sdk.Dec        `json:"tokens"`           // delegated tokens (incl. self-delegation)
-	DelegatorShares sdk.Dec        `json:"delegator_shares"` // total shares issued to a validator's delegators
+	Status          sdk.BondStatus `json:"status"`           // validator status (bonded/unbonding/unbonded) 验证者状态
+	Tokens          sdk.Dec        `json:"tokens"`           // delegated tokens (incl. self-delegation) 抵押的链上资产数量
+	DelegatorShares sdk.Dec        `json:"delegator_shares"` // total shares issued to a validator's delegators 分配给验证者的委托人的份额总量
 
-	Description        Description `json:"description"`           // description terms for the validator
+	Description        Description `json:"description"`           // description terms for the validator 验证者的描述消息
 	BondHeight         int64       `json:"bond_height"`           // earliest height as a bonded validator
 	BondIntraTxCounter int16       `json:"bond_intra_tx_counter"` // block-local tx index of validator change
 
-	UnbondingHeight  int64     `json:"unbonding_height"` // if unbonding, height at which this validator has begun unbonding
+	UnbondingHeight  int64     `json:"unbonding_height"` // if unbonding, height at which this validator has begun unbonding 验证者开始解绑周期的区块高度
 	UnbondingMinTime time.Time `json:"unbonding_time"`   // if unbonding, min time for the validator to complete unbonding
 
-	Commission Commission `json:"commission"` // commission parameters
+	Commission Commission `json:"commission"` // commission parameters 验证者的佣金设置
 
 	DistributionAddr sdk.AccAddress `json:"distribution_addr,omitempty"` // the address receives rewards from the side address, and distribute rewards to delegators. It's auto generated
 	SideChainId      string         `json:"side_chain_id,omitempty"`     // side chain id to distinguish different side chains
@@ -476,6 +479,7 @@ func (v Validator) SetInitialCommission(commission Commission) (Validator, sdk.E
 //_________________________________________________________________________________________________________
 
 // AddTokensFromDel adds tokens to a validator
+// 委托人增加委托
 func (v Validator) AddTokensFromDel(pool Pool, amount int64) (Validator, Pool, sdk.Dec) {
 
 	// bondedShare/delegatedShare
