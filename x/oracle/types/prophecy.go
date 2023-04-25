@@ -42,6 +42,8 @@ func (p *Params) KeyValuePairs() params.KeyValuePairs {
 // Each transaction, pending potential results are also calculated, stored and indexed by their byte result
 // to allow discovery of consensus on any the result in constant time without having to sort or run
 // through the list of claims to find the one with highest consensus
+// 预言是个包含预言机元数据的数据结构
+// 通过声明的验证器bech32地址(BC上的地址)和声明的json值对声明进行索引
 type Prophecy struct {
 	ID     string `json:"id"`
 	Status Status `json:"status"`
@@ -52,7 +54,7 @@ type Prophecy struct {
 	//This is a mapping from a claim to the list of validators that made that claim.
 	ClaimValidators map[string][]sdk.ValAddress `json:"claim_validators"`
 	//This is a mapping from a validator bech32 address to their claim
-	ValidatorClaims map[string]string `json:"validator_claims"`
+	ValidatorClaims map[string]string `json:"validator_claims"` // 地址 -> 声明
 }
 
 // DBProphecy is what the prophecy becomes when being saved to the database.
@@ -134,6 +136,7 @@ func (prophecy Prophecy) FindHighestClaim(ctx sdk.Context, stakeKeeper StakingKe
 }
 
 // AddClaim adds a given claim to this prophecy
+// 添加声明
 func (prophecy *Prophecy) AddClaim(validator sdk.ValAddress, claim string) {
 	validatorBech32 := validator.String()
 	prophecy.ValidatorClaims[validatorBech32] = claim

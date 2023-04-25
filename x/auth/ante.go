@@ -147,6 +147,7 @@ func validateAccNumAndSequence(ctx sdk.Context, accs []sdk.Account, sigs []StdSi
 	return sdk.Result{}
 }
 
+// 验证签名、序列号增加
 // verify the signature and increment the sequence.
 // if the account doesn't have a pubkey, set it.
 func processSig(ctx sdk.Context,
@@ -160,6 +161,7 @@ func processSig(ctx sdk.Context,
 	if err != nil {
 		return nil, sdk.ErrInternal("setting PubKey on signer's account").Result()
 	}
+	// pubKey.VerifyBytes(signBytes, sig.Signature) 用PubKey对签名进行验证
 	if (mode == sdk.RunTxModeCheck || mode == sdk.RunTxModeDeliver) && !pubKey.VerifyBytes(signBytes, sig.Signature) {
 		return nil, sdk.ErrUnauthorized("signature verification failed").Result()
 	}

@@ -33,7 +33,7 @@ func handleClaimMsg(ctx sdk.Context, oracleKeeper Keeper, msg ClaimMsg) sdk.Resu
 	if sequence != msg.Sequence {
 		return types.ErrInvalidSequence(fmt.Sprintf("current sequence of channel %d is %d", types.RelayPackagesChannelId, sequence)).Result()
 	}
-
+	// 处理声明
 	prophecy, sdkErr := oracleKeeper.ProcessClaim(ctx, claim)
 	if sdkErr != nil {
 		return sdkErr.Result()
@@ -55,7 +55,9 @@ func handleClaimMsg(ctx sdk.Context, oracleKeeper Keeper, msg ClaimMsg) sdk.Resu
 	}
 
 	events := make([]sdk.Event, 0, len(packages))
+
 	for _, pack := range packages {
+		// 处理跨链包
 		event, sdkErr := handlePackage(ctx, oracleKeeper, msg.ChainId, &pack)
 		if sdkErr != nil {
 			// only do log, but let reset package get chance to execute.
@@ -67,6 +69,7 @@ func handleClaimMsg(ctx sdk.Context, oracleKeeper Keeper, msg ClaimMsg) sdk.Resu
 		events = append(events, event)
 
 		// increase channel sequence
+		// 序列号+1
 		oracleKeeper.ScKeeper.IncrReceiveSequence(ctx, msg.ChainId, pack.ChannelId)
 	}
 
@@ -107,6 +110,7 @@ func handlePackage(ctx sdk.Context, oracleKeeper Keeper, chainId sdk.ChainID, pa
 	}
 
 	fee := sdk.Coins{sdk.Coin{Denom: sdk.NativeTokenSymbol, Amount: feeAmount}}
+	// 扣除手续费
 	_, _, sdkErr := oracleKeeper.BkKeeper.SubtractCoins(ctx, sdk.PegAccount, fee)
 	if sdkErr != nil {
 		return sdk.Event{}, sdkErr
